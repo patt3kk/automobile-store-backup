@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Automobile Panel</title>
+    <!-- <link rel="stylesheet" href="../style.css"> -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        
+        .admin-dashboard {
+            /* max-width: 1200px; */
+            width: 100%;
+            /* margin: 0 auto; */
+            /* padding: 20px; */
+            display: flex;
+            flex-direction: row;
+            background: linear-gradient(to bottom, seagreen, rgb(19, 71, 42));
+        }
+        
+        .header {
+            background: linear-gradient(150deg,seagreen, rgb(34, 114, 69), rgb(19, 71, 42));;
+            color: white;
+            min-height: 100vh;
+            /* padding: 15px 20px; */
+            /* margin-bottom: 20px; */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            justify-items: center;
+            /* align-items: center; */
+            min-width: 150px;
+            width: 15%;
+            /* max-width: 300px; */
+            /* padding-top: 30vh; */
+            position: fixed;
+            /* padding-bottom: 30vh; */
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            /* padding: 8px 12px; */
+            /* border-radius: 4px; */
+            background-color: rgba(8, 56, 29, 0.514);
+            /* height: 40px; */
+            width: 100%;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            text-align: center;
+
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: #3498db;
+        }
+        
+        .logout-btn {
+            margin-top: 15px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            /* padding: 8px 15px; */
+            padding-top: 20px;
+            padding-bottom: 20px;
+            width: 100%;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .tabs {
+            display: none;
+            margin-bottom: 20px;
+            background-color: white;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            background-color: #ddd;
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .tab.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            background-color: white;
+            padding: 20px;
+            border-top-left-radius: 25px;
+            border-bottom-left-radius: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            width: 85%;
+            margin-left: 15%;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        .btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-success {
+            background-color: #27ae60;
+        }
+        
+        .btn-success:hover {
+            background-color: #229954;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        .admin-list, .post-list {
+            margin-top: 20px;
+        }
+        
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="admin-dashboard">
+        <div class="header">
+            <div class="nav-links">
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="#" class="nav-link" onclick="switchTab('post-management')">Create Post</a>
+                <a href="../garage/garage.html" class="nav-link" target="_blank">Garage</a>
+            </div>
+            <!-- <h1>Admin Dashboard</h1> -->
+            <button id="logoutBtn" class="logout-btn">Logout</button>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" data-tab="admin-management">Admin Management</button>
+            <button class="tab" data-tab="post-management">Post Management</button>
+        </div>
+        
+        <!-- Admin Management Tab -->
+        <div id="admin-management" class="tab-content active">
+            <h2>Admin Management</h2>
+            
+            <div id="adminMessage" class="message hidden"></div>
+            
+            <!-- Create Admin Form (Super-admin only) -->
+            <div id="createAdminSection">
+                <h3>Create New Admin</h3>
+                <form id="createAdminForm">
+                    <div class="form-group">
+                        <label for="firstName">First Name:</label>
+                        <input type="text" id="firstName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lastName">Last Name:</label>
+                        <input type="text" id="lastName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    
+                    <button type="submit" class="btn">Create Admin</button>
+                </form>
+            </div>
+            
+            <!-- Admin List -->
+            <div class="admin-list">
+                <h3>Admin List</h3>
+                <table id="adminsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Name</th>
+                            <th>Role</th>
+                            <th>Created At</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminsTableBody">
+                        <!-- Admins will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Post Management Tab -->
+        <div id="post-management" class="tab-content">
+            <h2>Post Management</h2>
+            
+            <div id="postMessage" class="message hidden"></div>
+            
+            <!-- Create/Edit Vehicle Post Form -->
+            <div class="form-container">
+                <h3 id="postFormTitle">Create Vehicle Post</h3>
+                <form id="postForm">
+                    <input type="hidden" id="postId">
+                    
+                    <div class="form-group">
+                        <label for="vehicleName">Vehicle Name:</label>
+                        <input type="text" id="vehicleName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vehicleDescription">Vehicle Description:</label>
+                        <textarea id="vehicleDescription" rows="5" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="whatsappNumber">WhatsApp Number (International Format):</label>
+                        <input type="text" id="whatsappNumber" placeholder="e.g., +1234567890" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vehicleImages">Vehicle Images (Multiple):</label>
+                        <input type="file" id="vehicleImages" accept="image/*" multiple>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success" id="submitPostBtn">Create Vehicle Post</button>
+                    <button type="button" class="btn" id="cancelEditBtn" style="display:none;">Cancel</button>
+                </form>
+            </div>
+            
+            <!-- Post List -->
+            <div class="post-list">
+                <h3>Post List</h3>
+                <table id="postsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Vehicle Name</th>
+                            <th>WhatsApp Number</th>
+                            <th>Created At</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="postsTableBody">
+                        <!-- Posts will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/adminAuth.js"></script>
+    <script>
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+
+
+            const token = localStorage.getItem('adminToken');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+
+            
+            // Load user info
+            loadUserInfo();
+            
+            // Set up tab switching
+            setupTabSwitching();
+            
+            // Set up form submissions
+            setupFormSubmissions();
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Load initial data
+            loadAdmins();
+            loadPosts();
+        });
+        
+        function loadUserInfo() {
+            const token = localStorage.getItem('adminToken');
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            
+            // Update UI based on role
+            if (payload.role !== 'super-admin') {
+                document.getElementById('createAdminSection').style.display = 'none';
+            }
+        }
+        
+        function setupTabSwitching() {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    
+                    // Remove active class from all tabs and content
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked tab and corresponding content
+                    this.classList.add('active');
+                    document.getElementById(tabName).classList.add('active');
+                    
+                    // Load data for the selected tab
+                    if (tabName === 'admin-management') {
+                        loadAdmins();
+                    } else if (tabName === 'post-management') {
+                        loadPosts();
+                    }
+                });
+            });
+        }
+        
+        function setupFormSubmissions() {
+            // Admin creation form
+            document.getElementById('createAdminForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const firstName = document.getElementById('firstName').value;
+                const lastName = document.getElementById('lastName').value;
+                const username = document.getElementById('username').value;
+                const email = document.getElementById('email').value;
+                
+                try {
+                    const response = await fetch('http://localhost:8001/api/v1/admin/admins', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                        },
+                        body: JSON.stringify({ firstName, lastName, username, email })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        showMessage('adminMessage', 'Admin created successfully! Check console for password.', 'success');
+                        document.getElementById('createAdminForm').reset();
+                        loadAdmins(); // Reload admin list
+                    } else {
+                        showMessage('adminMessage', data.message || 'Error creating admin', 'error');
+                    }
+                } catch (error) {
+                    showMessage('adminMessage', 'Network error: ' + error.message, 'error');
+                }
+            });
+            
+            // Post form
+            document.getElementById('postForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const postId = document.getElementById('postId').value;
+                const name = document.getElementById('vehicleName').value;
+                const description = document.getElementById('vehicleDescription').value;
+                const whatsappNumber = document.getElementById('whatsappNumber').value;
+                const images = document.getElementById('vehicleImages').files;
+                
+                const formData = new FormData();
+                formData.append('name', name);
+                formData.append('description', description);
+                formData.append('whatsappNumber', whatsappNumber);
+                
+                // Add multiple images to form data
+                for (let i = 0; i < images.length; i++) {
+                    formData.append('images', images[i]);
+                }
+                
+                try {
+                    let url, method;
+                    if (postId) {
+                        // Update existing post
+                        url = `http://localhost:8001/api/v1/posts/${postId}`;
+                        method = 'PUT';
+                    } else {
+                        // Create new post
+                        url = 'http://localhost:8001/api/v1/posts';
+                        method = 'POST';
+                    }
+                    
+                    const response = await fetch(url, {
+                        method: method,
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                            // Note: Do not set Content-Type header when using FormData
+                            // The browser will set it automatically with the proper boundary
+                        },
+                        body: formData
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        showMessage('postMessage', data.message || 'Vehicle post saved successfully!', 'success');
+                        document.getElementById('postForm').reset();
+                        document.getElementById('postFormTitle').textContent = 'Create Vehicle Post';
+                        document.getElementById('submitPostBtn').textContent = 'Create Vehicle Post';
+                        document.getElementById('cancelEditBtn').style.display = 'none';
+                        loadPosts(); // Reload posts list
+                    } else {
+                        showMessage('postMessage', data.message || 'Error saving vehicle post', 'error');
+                    }
+                } catch (error) {
+                    showMessage('postMessage', 'Network error: ' + error.message, 'error');
+                }
+            });
+        }
+        
+        function setupEventListeners() {
+            // Logout button
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                localStorage.removeItem('adminToken');
+                window.location.href = 'login.html';
+            });
+            
+            // Cancel edit post button
+            document.getElementById('cancelEditBtn').addEventListener('click', function() {
+                document.getElementById('postForm').reset();
+                document.getElementById('postFormTitle').textContent = 'Create Vehicle Post';
+                document.getElementById('submitPostBtn').textContent = 'Create Vehicle Post';
+                document.getElementById('cancelEditBtn').style.display = 'none';
+            });
+        }
+        
+        function switchTab(tabName) {
+            // Remove active class from all tabs and content
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            // Add active class to clicked tab and corresponding content
+            const tab = document.querySelector(`.tab[data-tab="${tabName}"]`);
+            const content = document.getElementById(tabName);
+            
+            if (tab && content) {
+                tab.classList.add('active');
+                content.classList.add('active');
+            }
+        }
+        
+        async function loadAdmins() {
+            try {
+                const response = await fetch('http://localhost:8001/api/v1/admin/admins', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    const tbody = document.getElementById('adminsTableBody');
+                    tbody.innerHTML = '';
+                    
+                    data.admins.forEach(admin => {
+                        const row = tbody.insertRow();
+                        row.innerHTML = `
+                            <td>${admin._id}</td>
+                            <td>${admin.username}</td>
+                            <td>${admin.email}</td>
+                            <td>${admin.firstName} ${admin.lastName}</td>
+                            <td>${admin.role}</td>
+                            <td>${new Date(admin.createdAt).toLocaleDateString()}</td>
+                            <td>
+                                ${admin.role !== 'super-admin' ? 
+                                    `<button class="btn btn-danger" onclick="deleteAdmin('${admin._id}')">Delete</button>` : 
+                                    'N/A'}
+                            </td>
+                        `;
+                    });
+                }
+            } catch (error) {
+                showMessage('adminMessage', 'Error loading admins: ' + error.message, 'error');
+            }
+        }
+        
+        async function loadPosts() {
+            try {
+                const response = await fetch('http://localhost:8001/api/v1/posts');
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    const tbody = document.getElementById('postsTableBody');
+                    tbody.innerHTML = '';
+                    
+                    data.posts.forEach(post => {
+                        const row = tbody.insertRow();
+                        row.innerHTML = `
+                            <td>${post._id}</td>
+                            <td>${post.name}</td>
+                            <td>${post.whatsappNumber}</td>
+                            <td>${new Date(post.createdAt).toLocaleDateString()}</td>
+                            <td>
+                                <button class="btn" onclick="editPost('${post._id}')">Edit</button>
+                                <button class="btn btn-danger" onclick="deletePost('${post._id}')">Delete</button>
+                            </td>
+                        `;
+                    });
+                }
+            } catch (error) {
+                showMessage('postMessage', 'Error loading posts: ' + error.message, 'error');
+            }
+        }
+        
+        async function deleteAdmin(adminId) {
+            if (!confirm('Are you sure you want to delete this admin?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`http://localhost:8001/api/v1/admin/admins/${adminId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('adminMessage', data.message || 'Admin deleted successfully!', 'success');
+                    loadAdmins(); // Reload admin list
+                } else {
+                    showMessage('adminMessage', data.message || 'Error deleting admin', 'error');
+                }
+            } catch (error) {
+                showMessage('adminMessage', 'Network error: ' + error.message, 'error');
+            }
+        }
+        
+        async function deletePost(postId) {
+            if (!confirm('Are you sure you want to delete this post?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`http://localhost:8001/api/v1/posts/${postId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('postMessage', data.message || 'Post deleted successfully!', 'success');
+                    loadPosts(); // Reload posts list
+                } else {
+                    showMessage('postMessage', data.message || 'Error deleting post', 'error');
+                }
+            } catch (error) {
+                showMessage('postMessage', 'Network error: ' + error.message, 'error');
+            }
+        }
+        
+        async function editPost(postId) {
+            try {
+                const response = await fetch(`http://localhost:8001/api/v1/posts/${postId}`);
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    const post = data.post;
+                    
+                    document.getElementById('postId').value = post._id;
+                    document.getElementById('vehicleName').value = post.name;
+                    document.getElementById('vehicleDescription').value = post.description;
+                    document.getElementById('whatsappNumber').value = post.whatsappNumber;
+                    document.getElementById('postFormTitle').textContent = 'Edit Vehicle Post';
+                    document.getElementById('submitPostBtn').textContent = 'Update Vehicle Post';
+                    document.getElementById('cancelEditBtn').style.display = 'inline-block';
+                                    
+                    // Switch to post management tab
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    document.querySelector('.tab[data-tab="post-management"]').classList.add('active');
+                    document.getElementById('post-management').classList.add('active');
+                }
+            } catch (error) {
+                showMessage('postMessage', 'Error loading post: ' + error.message, 'error');
+            }
+        }
+        
+        function showMessage(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `message ${type}`;
+            element.classList.remove('hidden');
+            
+            // Auto-hide success messages after 5 seconds
+            if (type === 'success') {
+                setTimeout(() => {
+                    element.classList.add('hidden');
+                }, 5000);
+            }
+        }
+    </script>
+</body>
+</html>

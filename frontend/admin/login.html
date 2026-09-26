@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Automobile Panel</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .login-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        .btn {
+            width: 100%;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .password-change-required {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Admin Login</h2>
+        
+        <div id="loginFormContainer">
+            <div id="loginMessage" class="message hidden"></div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" required>
+                </div>
+                
+                <button type="submit" class="btn">Login</button>
+            </form>
+        </div>
+        
+        <div id="passwordChangeContainer" class="hidden">
+            <div id="passwordChangeMessage" class="message hidden"></div>
+            
+            <div class="password-change-required">
+                <strong>Password Change Required</strong><br>
+                Your account requires a password change. Please set a new password.
+            </div>
+            
+            <form id="passwordChangeForm">
+                <div class="form-group">
+                    <label for="newPassword">New Password:</label>
+                    <input type="password" id="newPassword" required minlength="8">
+                    <small>Must be at least 8 characters long</small>
+                </div>
+                
+                <button type="submit" class="btn">Change Password</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/adminAuth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if already logged in
+            const token = localStorage.getItem('adminToken');
+            if (token) {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+            
+            // Set up login form
+            document.getElementById('loginForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                try {
+                    const response = await fetch('http://localhost:8001/api/v1/admin/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email, password })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        if (data.mustChangePassword) {
+                            // Store temporary token and show password change form
+                            localStorage.setItem('tempToken', data.token);
+                            document.getElementById('loginFormContainer').style.display = 'none';
+                            document.getElementById('passwordChangeContainer').classList.remove('hidden');
+                        } else {
+                            // Store token and redirect to dashboard
+                            localStorage.setItem('adminToken', data.token);
+                            window.location.href = 'dashboard.html';
+                        }
+                    } else {
+                        showMessage('loginMessage', data.message || 'Login failed', 'error');
+                    }
+                } catch (error) {
+                    showMessage('loginMessage', 'Network error: ' + error.message, 'error');
+                }
+            });
+            
+            // Set up password change form
+            document.getElementById('passwordChangeForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const newPassword = document.getElementById('newPassword').value;
+                
+                if (newPassword.length < 8) {
+                    showMessage('passwordChangeMessage', 'Password must be at least 8 characters long', 'error');
+                    return;
+                }
+                
+                try {
+                    const tempToken = localStorage.getItem('tempToken');
+                    
+                    const response = await fetch('http://localhost:8001/api/v1/admin/change-password', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${tempToken}`
+                        },
+                        body: JSON.stringify({ newPassword })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        // Store new token and redirect to dashboard
+                        localStorage.setItem('adminToken', data.token);
+                        localStorage.removeItem('tempToken');
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        showMessage('passwordChangeMessage', data.message || 'Password change failed', 'error');
+                    }
+                } catch (error) {
+                    showMessage('passwordChangeMessage', 'Network error: ' + error.message, 'error');
+                }
+            });
+        });
+        
+        function showMessage(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `message ${type}`;
+            element.classList.remove('hidden');
+            
+            // Auto-hide success messages after 5 seconds
+            if (type === 'success') {
+                setTimeout(() => {
+                    element.classList.add('hidden');
+                }, 5000);
+            }
+        }
+    </script>
+</body>
+</html>
