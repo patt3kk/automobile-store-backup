@@ -10,7 +10,7 @@ app.use("/api/v1", router)
 
 app.all("*", notFound);
 app.use(errorHandler);
-app.listen(config.PORT, async()=>{
+app.listen(config.PORT, '0.0.0.0', async()=>{
     try{
     //connect to database
     console.log("connecting to database...");
@@ -18,7 +18,7 @@ app.listen(config.PORT, async()=>{
     connect(config.DB_URI)
     console.log("database connected successfully...")
 
-    console.log(`server is running on localhost:${config.PORT}`)
+    console.log(`server is running on port ${config.PORT}`)
 }catch(error){
     console.error(error);
     process.exit(-1);
