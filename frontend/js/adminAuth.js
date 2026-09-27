@@ -1,6 +1,6 @@
 // Admin authentication functions
 
-const API_BASE_URL = 'http://localhost:8001/api/v1';
+const API_BASE_URL = 'https://automobile-store-backup.onrender.com/api/v1';
 
 // Login admin function
 async function loginAdmin(email, password) {
