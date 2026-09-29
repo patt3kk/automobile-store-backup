@@ -23,7 +23,7 @@
                     <a href="./contact/contact.html">Contact</a>
                     <a href="./garage/garage.html">Garage</a>
                 </div>
-                <div class="hamburger-men">
+                <div class="hamburger-menu">
                     <div class="bar"></div>
                     <div class="bar"></div>
                     <div class="bar"></div>
@@ -43,7 +43,7 @@
             <div class="hero-content">
                 <h1>Automotive Excellence.</h1>
                 <p>Explore our diverse selection of top tier vehicles and experience automotive excellence firsthand.</p>
-                <button class="button-6" role="button">Explore</button>
+                <button class="button-6" role="button" onclick="document.getElementById('carpost').scrollIntoView({ behavior: 'smooth' })">Explore</button>
             </div>
         </section>
         <!-- Brand Logos Section -->
@@ -130,7 +130,7 @@
             <video controls src="./videos/renders_a4519mxrtk_patek cars_ where luxury meets performance.mp4" type="video/mp4"></video>
         </section>
 
-        <section class="garage sect">
+        <section class="garage sect" id="carpost">
             <h1><span>Garage</span></h1>
             <hr>
             <div id="recent-posts-container" class="posts-grid">
@@ -162,11 +162,11 @@
         <section class="final">
             <h1>Come browse our Showroom</h1>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi amet cum reprehenderit ducimus quos! Similique illo nisi quaerat totam qui assumenda labore amet optio repudiandae pariatur, cumque id soluta quo?</p>
-            <button class="button-6" role="button">Browse Showroom</button>
+            <button class="button-6" role="button" onclick="window.location.href='./garage/garage.html'">Browse Showroom</button>
         </section>
         <footer>
             <div class="footer-columns col1">
-                <img src="./images/logo.png" alt="">
+                <img src="./images/logo.png" alt="" class="foti">
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus recusandae tempora ab corporis id, illo accusamus minima ratione repellendus harum sapiente molestiae assumenda enim autem possimus at necessitatibus vero nihil.</p>
                 <div class="social-box">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-twitter-x" viewBox="0 0 16 16">

@@ -50,7 +50,6 @@
     top: 0;
     left: 0;
     z-index: 10;
-    background-color: transparent;
 }
 
 .hamburger-menu{
@@ -638,6 +637,9 @@ footer{
     flex-direction: row;
     padding: 120px;
 }
+.foti{
+    padding-bottom: 10px;
+}
 .footer-columns{
     display: flex;
     flex-direction: column;
@@ -1196,13 +1198,26 @@ footer{
 }
 
 
-/* @media screen and (max-width: 500px) {
+@media screen and (max-width: 500px) {
+    #recent-posts-container{
+        width:100%;
+    }
+
     #recent-posts-container .posts-grid {
         width: 100%;
+        display: flex;
+        flex-direction: column;
+
     }
+
     #recent-posts-container .box {
+        width: 100%;
+        height: auto;
+    }
+
+    /* #recent-posts-container .box {
         width: 70%;
         height: auto;
         min-height: 300px;
-    }
-} */
+    } */
+}
