@@ -16,13 +16,15 @@ const corsOptions = {
         'http://localhost:5500',
         'http://127.0.0.1:5500',
         'http://localhost:8001',
-        'http://127.0.0.1:8001'
+        'http://127.0.0.1:8001',
+        'https://defirstcallpremium.vercel.app/'
     ],
     credentials: true,
     optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));
+
 
 // Serve static files from uploads directory
 app.use('/uploads', express.static('uploads'));
