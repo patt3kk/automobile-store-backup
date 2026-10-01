@@ -17,7 +17,8 @@ const corsOptions = {
         'http://127.0.0.1:5500',
         'http://localhost:8001',
         'http://127.0.0.1:8001',
-        'https://defirstcallpremium.vercel.app'
+        'https://defirstcallpremium.vercel.app',
+        'https://carshowroombygideon.vercel.app'
     ],
     credentials: true,
     optionsSuccessStatus: 200

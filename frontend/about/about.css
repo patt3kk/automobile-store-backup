@@ -193,6 +193,7 @@
 .odome {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     /* background-color: rgb(29, 92, 56); */
     background: linear-gradient(to right, seagreen, rgb(19, 71, 42));
@@ -202,7 +203,7 @@
 }
 .odometer-container {
     display: flex;
-    gap: 45px;
+    gap: 55px;
 }
 
 .od1{
@@ -484,6 +485,13 @@ footer{
     .col1 p {
         padding-right: 0;
     }
+}
+
+@media screen and (max-width: 600px) {
+    .odometer-container {
+    display: flex;
+    gap: 15px;
+}
 }
 
 
